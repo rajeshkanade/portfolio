@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===========================================================================
+   Design system — dark cinematic theme, glassmorphism, accent gradient.
+   Fonts (Space Grotesk + Inter) come from next/font via CSS variables.
+   =========================================================================== */
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --bg: #0a0a0f;
+    --bg-deep: #06060a;
+    --violet: #8b5cf6;
+    --cyan: #22d3ee;
+  }
+
+  * {
+    @apply border-ink-line;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Offset smooth-scroll targets so the sticky navbar doesn't cover headings. */
+    scroll-padding-top: 5rem;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-ink text-slate-300 font-sans antialiased;
+    background-color: var(--bg);
+    /* Layered ambient glows over the deep base for a cinematic backdrop. */
+    background-image:
+      radial-gradient(60% 50% at 15% 0%, rgba(139, 92, 246, 0.16), transparent 60%),
+      radial-gradient(55% 45% at 100% 10%, rgba(34, 211, 238, 0.1), transparent 60%),
+      radial-gradient(50% 60% at 50% 120%, rgba(99, 102, 241, 0.14), transparent 60%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display text-slate-50;
+    text-wrap: balance;
+  }
+
+  /* Visible, on-brand keyboard focus for accessibility. */
+  :focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: rgba(139, 92, 246, 0.4);
+    color: #fff;
+  }
+
+  /* Honor reduced-motion globally as a safety net beyond the JS-level checks. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  /* Hide the native cursor on precise-pointer devices — the custom glowing
+     cursor takes over. Touch devices and reduced-motion keep the OS cursor. */
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    html.has-custom-cursor,
+    html.has-custom-cursor a,
+    html.has-custom-cursor button,
+    html.has-custom-cursor [role='button'],
+    html.has-custom-cursor input,
+    html.has-custom-cursor textarea,
+    html.has-custom-cursor label {
+      cursor: none;
+    }
+  }
+}
+
+@layer components {
+  /* Glassmorphism card — translucent, blurred, soft glowing border. */
+  .glass {
+    @apply rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl;
+    box-shadow:
+      0 8px 40px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  /* Glass surface that lifts and glows on hover. */
+  .glass-hover {
+    @apply glass transition-all duration-300;
+  }
+  .glass-hover:hover {
+    @apply border-white/20 bg-white/[0.06];
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.5),
+      0 0 40px rgba(139, 92, 246, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  /* Animated violet → cyan gradient text for headlines. */
+  .gradient-text {
+    @apply bg-accent-gradient bg-clip-text text-transparent;
+    background-size: 200% auto;
+    animation: gradientX 6s ease infinite;
+  }
+
+  /* Solid (non-animated) gradient text where motion would distract. */
+  .gradient-text-static {
+    @apply bg-accent-gradient bg-clip-text text-transparent;
+  }
+
+  /* Primary CTA — filled gradient pill with a soft glow. */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-accent-gradient
+           px-6 py-3 font-medium text-white shadow-glow transition-shadow duration-300
+           hover:shadow-glow-lg;
+    background-size: 200% auto;
+  }
+
+  /* Secondary CTA — glass pill. */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/15
+           bg-white/[0.04] px-6 py-3 font-medium text-slate-200 backdrop-blur-md
+           transition-colors duration-300 hover:border-white/30 hover:text-white;
+  }
+
+  /* Small pill used for skills/tags. */
+  .chip {
+    @apply inline-flex items-center rounded-full border border-white/10 bg-white/[0.05]
+           px-3 py-1.5 text-sm text-slate-300 backdrop-blur-sm;
+  }
+
+  /* Section vertical rhythm + horizontal gutters. */
+  .section {
+    @apply relative mx-auto w-full max-w-6xl px-5 py-24 sm:px-8 md:py-32;
+  }
+
+  /* Eyebrow label above section titles. */
+  .eyebrow {
+    @apply mb-3 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-accent-cyan;
+  }
+
+  /* Gradient border wrapper (for emphasized cards). */
+  .glow-border {
+    @apply relative rounded-2xl p-px;
+    background: linear-gradient(140deg, rgba(139, 92, 246, 0.5), rgba(34, 211, 238, 0.3), transparent 60%);
+  }
+}
+
+@layer utilities {
+  /* Film-grain noise overlay — apply to a fixed full-screen element. */
+  .bg-grain {
+    background-image: theme('backgroundImage.noise');
+  }
+
+  /* 3D helpers for tilt cards. */
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .perspective {
+    perspective: 1000px;
+  }
+  .translate-z-20 {
+    transform: translateZ(20px);
+  }
+
+  /* Thin custom scrollbar matching the theme. */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(139, 92, 246, 0.5) transparent;
+  }
+}
+
+/* Page-wide scrollbar styling (WebKit). */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--violet), var(--cyan));
+  border-radius: 9999px;
+  border: 2px solid var(--bg-deep);
+}
+
+/* Keyframe duplicated in CSS so .gradient-text works without a utility class. */
+@keyframes gradientX {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
