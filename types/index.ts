@@ -79,6 +79,23 @@ export interface Project {
   link?: string
 }
 
+/** A normalized public GitHub repository for the live "More on GitHub" grid. */
+export interface GitHubRepo {
+  id: number
+  name: string
+  description: string | null
+  url: string
+  homepage: string | null
+  language: string | null
+  stars: number
+  forks: number
+  topics: string[]
+  /** Pre-formatted "MMM YYYY" label (computed server-side to avoid hydration drift). */
+  updatedLabel: string
+  /** ISO timestamp of the last push, for client-side sorting if needed. */
+  pushedAt: string
+}
+
 /** A research paper / publication entry. */
 export interface ResearchItem {
   title: string
@@ -129,6 +146,12 @@ export interface PortfolioData {
     resumeUrl?: string
     /** Longer narrative paragraph(s) for the About section. */
     bio: string[]
+  }
+  /** GitHub config for the live "More on GitHub" projects grid. */
+  github: {
+    username: string
+    /** Repo names to hide from the live grid (e.g. the profile README repo). */
+    excludeRepos?: string[]
   }
   socials: SocialLink[]
   nav: NavLink[]

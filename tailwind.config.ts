@@ -88,6 +88,10 @@ const config: Config = {
           '33%': { transform: 'translate(4%, -6%) scale(1.1)' },
           '66%': { transform: 'translate(-4%, 4%) scale(0.95)' },
         },
+        blink: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0' },
+        },
       },
       animation: {
         float: 'float 6s ease-in-out infinite',
@@ -98,6 +102,7 @@ const config: Config = {
         'gradient-x': 'gradientX 6s ease infinite',
         'pulse-glow': 'pulseGlow 4s ease-in-out infinite',
         aurora: 'aurora 18s ease-in-out infinite',
+        blink: 'blink 1s steps(1) infinite',
       },
     },
   },

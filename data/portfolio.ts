@@ -21,6 +21,12 @@ export const portfolio: PortfolioData = {
     ],
   },
 
+  github: {
+    username: 'rajeshkanade',
+    // Hidden from the live grid: the profile README repo and this portfolio repo.
+    excludeRepos: ['rajeshkanade', 'portfolio'],
+  },
+
   socials: [
     { label: 'GitHub', href: 'https://github.com/rajeshkanade', icon: 'Github' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/rajesh-kanade', icon: 'Linkedin' },

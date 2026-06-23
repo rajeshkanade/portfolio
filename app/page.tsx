@@ -10,6 +10,8 @@ import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import ParticleField from '@/components/ParticleField'
 import CursorGlow from '@/components/CursorGlow'
+import { portfolio } from '@/data/portfolio'
+import { fetchGitHubRepos } from '@/lib/github'
 
 /**
  * Root page. Each section component owns its own `<section id="...">` anchor so
@@ -17,7 +19,13 @@ import CursorGlow from '@/components/CursorGlow'
  * pointer-transparent background behind all content; CursorGlow paints the
  * glowing custom cursor above everything.
  */
-export default function Home() {
+export default async function Home() {
+  const { github } = portfolio
+  // Server-side, ISR-cached (revalidates ~hourly). Falls back to [] on failure,
+  // in which case the "More on GitHub" grid simply hides.
+  const repos = await fetchGitHubRepos(github.username, github.excludeRepos)
+  const profileUrl = `https://github.com/${github.username}`
+
   return (
     <div className="relative min-h-screen overflow-x-hidden">
       <CursorGlow />
@@ -36,7 +44,7 @@ export default function Home() {
         <About />
         <Experience />
         <Skills />
-        <Projects />
+        <Projects repos={repos} profileUrl={profileUrl} />
         <Research />
         <Education />
         <Contact />

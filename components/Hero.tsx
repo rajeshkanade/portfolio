@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, ChevronDown, Download, Github, Linkedin, Mail, Phone } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -18,6 +19,72 @@ const SOCIAL_ICONS: Record<SocialLink['icon'], LucideIcon> = {
   FileText: Mail,
   Twitter: Mail,
   Globe: Mail,
+}
+
+interface TypewriterOpts {
+  /** ms between typed characters */
+  typeSpeed?: number
+  /** ms between erased characters */
+  deleteSpeed?: number
+  /** ms to hold the full string before erasing */
+  pauseEnd?: number
+  /** ms to wait (empty) before retyping */
+  pauseStart?: number
+}
+
+/**
+ * Reveals `text` one character at a time, then erases and retypes it forever
+ * (a looping typewriter). Honors reduced-motion by rendering the full string
+ * statically. Returns the currently-visible slice.
+ */
+function useTypewriter(text: string, opts: TypewriterOpts = {}): { text: string } {
+  const { typeSpeed = 140, deleteSpeed = 55, pauseEnd = 1800, pauseStart = 650 } = opts
+  const reduced = useReducedMotion() ?? false
+  const [count, setCount] = useState(reduced ? text.length : 0)
+
+  useEffect(() => {
+    if (reduced) {
+      setCount(text.length)
+      return
+    }
+    let i = 0
+    let deleting = false
+    let timer: ReturnType<typeof setTimeout>
+    const step = (): void => {
+      if (!deleting) {
+        i += 1
+        setCount(i)
+        if (i >= text.length) {
+          deleting = true
+          timer = setTimeout(step, pauseEnd)
+          return
+        }
+      } else {
+        i -= 1
+        setCount(i)
+        if (i <= 0) {
+          deleting = false
+          timer = setTimeout(step, pauseStart)
+          return
+        }
+      }
+      timer = setTimeout(step, deleting ? deleteSpeed : typeSpeed)
+    }
+    timer = setTimeout(step, pauseStart)
+    return () => clearTimeout(timer)
+  }, [text, typeSpeed, deleteSpeed, pauseEnd, pauseStart, reduced])
+
+  return { text: text.slice(0, count) }
+}
+
+/** Blinking typewriter caret. Zero-width wrapper so it never affects text
+ *  wrapping; the visible bar is drawn by an absolutely-positioned child. */
+function TypeCaret() {
+  return (
+    <span className="relative inline-block w-0 align-baseline" aria-hidden>
+      <span className="animate-blink absolute bottom-[0.1em] left-0 h-[0.72em] w-[3px] rounded-full bg-accent-cyan" />
+    </span>
+  )
 }
 
 /** A single magnetic, icon-only social link (own component so the hook is not
@@ -49,6 +116,22 @@ export default function Hero() {
   const { profile, socials } = portfolio
   const cta = useMagnetic(0.35)
 
+  // Typewriter for the headline. We type one continuous string ("Hi, I'm " +
+  // name). To keep wrapping/height perfectly stable, every character is ALWAYS
+  // rendered — typed chars are shown, the rest are visibility-hidden but still
+  // occupy their space — so line breaks are fixed by the final text and never
+  // reflow. The caret is zero-width, so it can't shift wrapping either.
+  const prefix = "Hi, I'm "
+  const fullHeading = `${prefix}${profile.name}`
+  const { text: typed } = useTypewriter(fullHeading)
+  const count = typed.length
+  const nameStart = prefix.length
+  const inName = count >= nameStart
+  const visPrefix = fullHeading.slice(0, Math.min(count, nameStart))
+  const hidPrefix = prefix.slice(Math.min(count, nameStart))
+  const visName = inName ? profile.name.slice(0, count - nameStart) : ''
+  const hidName = inName ? profile.name.slice(count - nameStart) : profile.name
+
   const float = reduced ? {} : { y: [0, -16, 0] }
   const floatTransition = reduced
     ? undefined
@@ -74,9 +157,20 @@ export default function Hero() {
 
           <motion.h1
             variants={fadeUp}
+            aria-label={fullHeading}
             className="mt-5 font-display text-5xl font-bold leading-tight text-slate-50 sm:text-6xl lg:text-7xl"
           >
-            Hi, I&apos;m <span className="gradient-text">{profile.name}</span>
+            {/* Every character is always in the flow (typed = visible, untyped =
+                visibility:hidden) so wrapping is decided once by the full text
+                and can't jump. The caret is a zero-width marker. */}
+            <span aria-hidden>
+              <span>{visPrefix}</span>
+              {!inName && <TypeCaret />}
+              {hidPrefix && <span className="invisible">{hidPrefix}</span>}
+              {visName && <span className="gradient-text">{visName}</span>}
+              {inName && <TypeCaret />}
+              {hidName && <span className="invisible gradient-text">{hidName}</span>}
+            </span>
           </motion.h1>
 
           <motion.p variants={fadeUp} className="mt-4 text-lg font-medium text-accent-cyan sm:text-xl">
