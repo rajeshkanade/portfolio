@@ -242,9 +242,8 @@ export default function Hero() {
             <span className="absolute left-1/2 top-full h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-cyan shadow-glow-cyan" />
           </div>
 
-          {/* portrait disc — its own dark→accent radial gradient (matching the
-              site) shows through the cut-out photo, so the photo background is
-              the website background. */}
+          {/* portrait disc — the studio headshot fills the circle (object-cover),
+              framed slightly toward the top so the face is centered. */}
           <motion.div animate={float} transition={floatTransition} className="glow-border relative h-[84%] w-[84%] rounded-full">
             <div
               className="relative h-full w-full overflow-hidden rounded-full shadow-glow-lg"
@@ -257,13 +256,7 @@ export default function Hero() {
               <img
                 src={profile.photo}
                 alt={profile.name}
-                className="absolute bottom-0 left-1/2 h-[112%] w-[112%] max-w-none -translate-x-1/2 object-contain object-bottom"
-                style={{
-                  // Feather the bottom edge so the torso melts into the disc.
-                  WebkitMaskImage:
-                    'linear-gradient(to bottom, black 86%, transparent 100%)',
-                  maskImage: 'linear-gradient(to bottom, black 86%, transparent 100%)',
-                }}
+                className="absolute inset-0 h-full w-full object-cover object-[center_18%]"
               />
 
               {/* inner vignette to seat the subject on the disc */}

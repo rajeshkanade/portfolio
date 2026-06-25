@@ -45,14 +45,14 @@ export const metadata: Metadata = {
       'Production-grade LLM applications, RAG pipelines, and agentic AI systems.',
     type: 'website',
     url: siteUrl,
-    images: [{ url: '/profile.png', width: 1200, height: 1200, alt: profile.name }],
+    images: [{ url: '/profile.jpg', width: 1252, height: 1252, alt: profile.name }],
   },
   twitter: {
     card: 'summary_large_image',
     title: `${profile.name} — Generative AI Engineer`,
     description:
       'Production-grade LLM applications, RAG pipelines, and agentic AI systems.',
-    images: ['/profile.png'],
+    images: ['/profile.jpg'],
   },
 }
 

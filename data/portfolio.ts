@@ -13,7 +13,7 @@ export const portfolio: PortfolioData = {
     location: 'Pune, India',
     email: 'rajeshkanade121@gmail.com',
     phone: '+91 7385028130',
-    photo: '/profile.png',
+    photo: '/profile.jpg',
     resumeUrl: '/resume.pdf',
     bio: [
       'Generative AI Engineer with 1+ year of production experience designing, developing, and deploying LLM applications, RAG pipelines, and agentic AI systems. I work fluently across LangChain, LangGraph, and LlamaIndex, paired with the OpenAI, Anthropic, and Gemini APIs and Docker-based FastAPI microservices.',

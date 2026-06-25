@@ -70,15 +70,17 @@ export default function Navbar() {
   const drawerId = 'mobile-nav-drawer'
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
+    <header
+      className={[
+        'fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300',
+        scrolled
+          ? 'border-white/10 bg-ink/70 backdrop-blur-xl'
+          : 'border-transparent bg-transparent',
+      ].join(' ')}
+    >
       <nav
         aria-label="Primary"
-        className={[
-          'mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 transition-colors duration-300 sm:px-6',
-          scrolled
-            ? 'border-b border-white/10 bg-ink/70 backdrop-blur-xl'
-            : 'border-b border-transparent bg-transparent',
-        ].join(' ')}
+        className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6"
       >
         {/* Brand */}
         <a
