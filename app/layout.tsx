@@ -20,7 +20,7 @@ const display = Space_Grotesk({
 })
 
 const { profile } = portfolio
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://rajeshkanade.vercel.app'
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://rajesh-kanade-portfolio.vercel.app'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
